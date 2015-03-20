@@ -17,11 +17,54 @@
 .menu-control-container-amc__header
 	border-bottom: 1px solid #dfdfdf
 
+.menu-control-container-amc__header,
+.menu-control-container-amc__footer
+	overflow: hidden
+	padding: 7px
+
 	p
 		margin: 0
 		padding: 0
 
-.menu-control-container-amc__header,
-.menu-control-container-amc__footer
-	overflow: hidden
+	a
+		line-height: 1.9
+
+.menu-control-container-amc__body
+	background: #fff
+	border-bottom: 1px solid #dfdfdf
 	padding: 10px
+
+.menu__menu-item-amc
+	margin: 0
+
+	&.menu__menu-item-amc--depth-1
+		margin-left: 30px
+
+.menu__menu-item__handle-amc
+	background: #fafafa
+	border: 1px solid #dfdfdf
+	+box-shadow(0 1px 1px rgba(0,0,0,0.04))
+	color: #222
+	cursor: move
+	height: auto
+	line-height: 20px
+	min-height: 20px
+	overflow: hidden
+	padding: 10px 15px
+	position: relative
+	width: 382px
+	word-wrap: break-word
+
+	&.menu__menu-item__handle-amc--separator
+		background: none
+		border: 0
+		+box-shadow(none)
+
+		hr
+			margin: 9px 0
+
+.menu__menu-item__bar-amc
+	margin: 9px 0 0
+
+.menu__menu-item__title-amc
+	font-weight: bold
