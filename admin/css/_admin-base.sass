@@ -1,0 +1,17 @@
+$app_prefix: amc
+
+// States
+.is-hidden-#{$app_prefix}
+	display: none
+
+// Helpers
+.h-pull-left-#{$app_prefix}
+	float: left
+
+.h-pull-right-#{$app_prefix}
+	float: right
+
+// Mixins
+=box-shadow($value)
+	-webkit-box-shadow: $value
+	box-shadow:         $value
