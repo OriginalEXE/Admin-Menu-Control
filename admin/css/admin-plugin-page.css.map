@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AACC,0BAAgB,CACf,UAAU,CAAE,IAAI",
+"sources": ["admin-plugin-page.sass"],
+"names": [],
+"file": "admin-plugin-page.css"
+}
