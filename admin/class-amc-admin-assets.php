@@ -64,6 +64,7 @@ class AMC_Admin_Assets {
 		}
 
 		wp_enqueue_style( 'amc-admin-plugin-page', AMC_PLUGIN_URL . 'admin/css/admin-plugin-page.css', array(), AMC_VERSION );
+		wp_enqueue_script( 'amc-admin-plugin-page', AMC_PLUGIN_URL . 'admin/js/admin-plugin-page.js', array( 'jquery', 'backbone', 'underscore' ), AMC_VERSION );
 
 	}
 

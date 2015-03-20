@@ -12,6 +12,20 @@
 
 ?>
 
+<!-- Backbone templates -->
+<script id="menu-item-template-amc" type="text/template">
+	<li class="menu__menu-item-amc <%= ( 1 === depth ) ? 'menu__menu-item-amc--depth-1' : '' %>">
+		<dl class="menu__menu-item__bar-amc">
+			<dt class="menu__menu-item__handle-amc <%= ( '<hr>' === title ) ? 'menu__menu-item__handle-amc--separator' : '' %> -js-menu-item-handle-amc">
+				<span class="menu__menu-item__title-amc">
+					<%= title %>
+				</span>
+			</dt>
+		</dl>
+	</li>
+</script>
+<!-- / Backbone templates -->
+
 <div class="wrap wrap-amc">
 
 	<h2><?php _e( 'Admin Menu Control', 'admin-menu-control' ); ?></h2>
@@ -45,7 +59,7 @@
 
 					<ul class="menu-amc -js-menu-sortable-amc">
 
-						<?php foreach ( $menu as $menu_item ) : ?>
+						<?php foreach ( $menu as $menu_item ) : /*?>
 
 							<?php $is_separator = ( empty( $menu_item[0] ) ) ? true : false; ?>
 
@@ -77,7 +91,7 @@
 
 							<?php endif; ?>
 
-						<?php endforeach; ?>
+						<?php */ endforeach; ?>
 
 					</ul>
 
