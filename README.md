@@ -1,2 +1,2 @@
 # Admin-Menu-Control
-Take control of the admin menu.
+Take control of the WordPress admin menu.
