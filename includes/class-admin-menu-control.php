@@ -100,6 +100,10 @@ class Admin_Menu_Control {
 				require_once AMC_PLUGIN_DIR . 'admin/class-amc-admin-menu.php';
 				require_once AMC_PLUGIN_DIR . 'admin/class-amc-admin-assets.php';
 
+			} else {
+
+				require_once AMC_PLUGIN_DIR . 'admin/class-amc-admin-ajax.php';
+
 			}
 
 		}

@@ -6,6 +6,10 @@
 	.nav-tab-wrapper
 		margin-top: 20px
 
+		a:focus
+			+box-shadow(none)
+			color: #555
+
 .tab-amc
 	margin-top: 20px
 
@@ -39,6 +43,12 @@
 
 	&.menu__menu-item-amc--depth-1
 		margin-left: 30px
+
+	&.ui-sortable-placeholder
+		border: 1px dashed #bbb
+		height: 40px
+		margin: 9px 0 0
+		width: 410px
 
 .menu__menu-item__handle-amc
 	background: #fafafa

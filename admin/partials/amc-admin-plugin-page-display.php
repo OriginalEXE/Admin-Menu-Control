@@ -31,10 +31,10 @@
 	<h2><?php _e( 'Admin Menu Control', 'admin-menu-control' ); ?></h2>
 
 	<h2 class="nav-tab-wrapper">
-		<a href="options-general.php?page=admin-menu-control" class="nav-tab nav-tab-active">
+		<a href="#/" class="nav-tab nav-tab-active">
 			<?php _e( 'Menu Control', 'admin-menu-control' ); ?>
 		</a>
-		<a href="options-general.php?page=admin-menu-control" class="nav-tab">
+		<a href="#/plugin-settings" class="nav-tab">
 			<?php _e( 'Settings', 'admin-menu-control' ); ?>
 		</a>
 	</h2>
@@ -109,6 +109,10 @@
 				</div>				
 			</footer>
 		</div>
+
+	</section>
+
+	<section class="tab-amc" data-content="plugin-settings">
 
 	</section>
 

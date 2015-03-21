@@ -38,7 +38,7 @@ class AMC_Admin_Assets {
 	/**
 	 * Register all hooks for this class.
 	 *
-	 * @since    1.0.0
+	 * @since 1.0.0
 	 */
 	public function __construct() {
 
@@ -48,11 +48,14 @@ class AMC_Admin_Assets {
 		$this->amc_registry->set( 'class_amc_admin_assets', $this );
 
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'localize_assets' ) );
 
 	}
 
 	/**
 	 * Enqueue all assets only when they are actually needed.
+	 *
+	 * @since 1.0.0
 	 */
 	public function enqueue_assets( $hook ) {
 
@@ -64,7 +67,34 @@ class AMC_Admin_Assets {
 		}
 
 		wp_enqueue_style( 'amc-admin-plugin-page', AMC_PLUGIN_URL . 'admin/css/admin-plugin-page.css', array(), AMC_VERSION );
-		wp_enqueue_script( 'amc-admin-plugin-page', AMC_PLUGIN_URL . 'admin/js/admin-plugin-page.js', array( 'jquery', 'backbone', 'underscore' ), AMC_VERSION );
+		wp_enqueue_script( 'amc-admin-plugin-page', AMC_PLUGIN_URL . 'admin/js/admin-plugin-page.js', array( 'jquery', 'backbone', 'underscore', 'jquery-ui-sortable' ), AMC_VERSION );
+
+	}
+
+	/**
+	 * Localize the assets.
+	 *
+	 * @since 1.0.0
+	 */
+	public function localize_assets( $hook ) {
+
+		if ( 'settings_page_admin-menu-control' !== $hook ) {
+
+			// We are not on our admin page, bail out
+			return;
+
+		}
+
+		$l10n = array();
+
+		// Localization
+		$localize = array(
+			'l10n'       => $l10n,
+			'nonce'      => wp_create_nonce( 'amc-nonce' ),
+			'menu_items' => $this->amc_registry->get( 'class_amc_admin_menu' )->get_admin_menu(),
+		);
+
+		wp_localize_script( 'amc-admin-plugin-page', 'AMClocalize', $localize );
 
 	}
 
