@@ -151,7 +151,6 @@
 				var $parents,
 					$children,
 					$transportContainer,
-					underViableParent,
 					transported,
 					isSeparator,
 					depth,
@@ -164,9 +163,6 @@
 					start: function( event, ui ) {
 
 						isSeparator = ui.item.attr( 'data-separator' );
-						underViableParent = ui.placeholder.prevUntil( ':not(.ui-sortable-helper)' ).not( '[data-separator="true"]' ).length;
-
-						console.log( ui.placeholder.prevUntil( 'li:not(.ui-sortable-helper)' ) );
 
 						depth = ui.item.attr( 'data-depth' );
 						$children = ui.item.nextUntil( '[data-depth="0"]' ).not( '.ui-sortable-placeholder' );
@@ -174,6 +170,9 @@
 						ui.placeholder.attr( 'data-depth', depth );
 
 						if ( isSeparator || ( '0' === depth && $children.length ) ) {
+
+							console.log( 'has children' );
+							console.log( $children );
 
 							transported = true;
 
@@ -201,17 +200,20 @@
 						realDepth = ui.item.attr( 'data-depth' );
 
 						// Check if separator or has children
-						if ( isSeparator || ( '0' === depth && $children.length ) ) {
+						if ( transported ) {
+
+							console.log( 'children or separator detected' );
 
 							return;
 
 						}
 
-						console.log( underViableParent );
-
-						if ( ! underViableParent ) {
+						// Stop separator from being a parent
+						if ( ui.placeholder.prev( '[data-separator]' ).length || ( ui.placeholder.prev( '.ui-sortable-helper' ).length && ui.placeholder.prev().prev( '[data-separator]' ).length ) ) {
 
 							ui.placeholder.attr( 'data-depth', 0 );
+
+							AMC.Dom.menuItemsContainer.sortable( 'refresh' );
 
 							return;
 
@@ -230,13 +232,17 @@
 
 						}
 
-						if ( 0 && '0' === depth && '1' === ui.placeholder.next().attr( 'data-depth' ) ) {
+						if ( 0 === ui.placeholder.index() || ( 0 === ui.helper.index() && 1 === ui.placeholder.index() ) ) {
 
-							ui.placeholder.attr( 'data-depth', 1 );
+							ui.placeholder.attr( 'data-depth', 0 );
 
 							AMC.Dom.menuItemsContainer.sortable( 'refresh' );
 
-						} else if ( '0' === depth && ( depth === realDepth ) && ui.position.left > 30 ) {
+							return;
+
+						}
+
+						if ( '0' === depth && ( depth === realDepth ) && ui.position.left > 30 ) {
 
 							ui.placeholder.attr( 'data-depth', 1 );
 
@@ -265,15 +271,18 @@
 					},
 					change: function( event, ui ) {
 
-						if ( 0 && ! isSeparator && ! $children.length ) {
+						// Check if it's a child, but not a last child
+						if ( '0' === depth && ui.placeholder.nextUntil( '[data-depth="0"]:not(.ui-sortable-helper)' ).not( '.ui-sortable-helper' ).length ) {
 
-							transported = true;
+							console.log( 'not a last child' );
 
-							instance.transportChildren( ui );
+							ui.placeholder.attr( 'data-depth', 1 );
+
+							AMC.Dom.menuItemsContainer.sortable( 'refresh' );
+
+							return;
 
 						}
-
-						underViableParent = ui.placeholder.prevUntil( ':not(.ui-sortable-helper)' ).not( '[data-separator="true"]' ).length;
 
 					}
 				});
