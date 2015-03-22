@@ -14,15 +14,14 @@
 
 <!-- Backbone templates -->
 <script id="menu-item-template-amc" type="text/template">
-	<li class="menu__menu-item-amc <%= ( 1 === depth ) ? 'menu__menu-item-amc--depth-1' : '' %>">
-		<dl class="menu__menu-item__bar-amc">
-			<dt class="menu__menu-item__handle-amc <%= ( '<hr>' === title ) ? 'menu__menu-item__handle-amc--separator' : '' %> -js-menu-item-handle-amc">
-				<span class="menu__menu-item__title-amc">
-					<%= title %>
-				</span>
-			</dt>
-		</dl>
-	</li>
+	<dl class="menu__menu-item__bar-amc">
+		<dt class="menu__menu-item__handle-amc <%= ( '<hr>' === title ) ? 'menu__menu-item__handle-amc--separator -js-menu-item-separator-amc' : '' %> -js-menu-item-handle-amc">
+			<span class="menu__menu-item__title-amc">
+				<%= title %>
+			</span>
+		</dt>
+	</dl>
+	<ul class="menu_menu-item__transport"></ul>
 </script>
 <!-- / Backbone templates -->
 

@@ -11,6 +11,7 @@
 			color: #555
 
 .tab-amc
+	display: none
 	margin-top: 20px
 
 .menu-control-container-amc
@@ -38,17 +39,21 @@
 	border-bottom: 1px solid #dfdfdf
 	padding: 10px
 
+.menu-amc
+	margin-top: 0
+	position: relative
+
 .menu__menu-item-amc
 	margin: 0
 
-	&.menu__menu-item-amc--depth-1
-		margin-left: 30px
-
 	&.ui-sortable-placeholder
 		border: 1px dashed #bbb
-		height: 40px
+		min-height: 40px
 		margin: 9px 0 0
 		width: 410px
+
+	&[data-depth="1"]
+		margin-left: 30px
 
 .menu__menu-item__handle-amc
 	background: #fafafa
@@ -74,7 +79,8 @@
 			margin: 9px 0
 
 .menu__menu-item__bar-amc
-	margin: 9px 0 0
+	margin: 0
+	padding: 9px 0 0
 
 .menu__menu-item__title-amc
 	font-weight: bold
