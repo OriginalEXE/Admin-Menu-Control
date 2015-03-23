@@ -1,7 +1,7 @@
 @import admin-base
 
 .wrap-#{$app_prefix}
-	max-width: 1050px
+	max-width: 900px
 
 	.nav-tab-wrapper
 		margin-top: 20px
@@ -14,10 +14,16 @@
 	display: none
 	margin-top: 20px
 
+.menu-control-aside-amc
+	float: left
+	overflow: hidden
+	width: 281px
+
 .menu-control-container-amc
 	background: #f5f5f5
 	border: 1px solid #e5e5e5
 	+box-shadow(0 1px 1px rgba(0,0,0,0.04))
+	margin-left: 300px
 
 .menu-control-container-amc__header
 	border-bottom: 1px solid #dfdfdf
@@ -55,6 +61,14 @@
 	&[data-depth="1"]
 		margin-left: 30px
 
+	&.is-open-amc
+
+		.menu__menu-item__body-amc
+			display: block
+
+		.menu__menu-item__edit-amc:after
+			content: '\f142'
+
 .menu__menu-item__handle-amc
 	background: #fafafa
 	border: 1px solid #dfdfdf
@@ -75,8 +89,14 @@
 		border: 0
 		+box-shadow(none)
 
+		.menu__menu-item__edit-amc
+			display: none
+
 		hr
 			margin: 9px 0
+
+	&:hover
+		border-color: #999
 
 .menu__menu-item__bar-amc
 	margin: 0
@@ -84,3 +104,151 @@
 
 .menu__menu-item__title-amc
 	font-weight: bold
+
+.menu__menu-item__edit-amc
+	display: block
+	height: 40px
+	position: absolute
+	right: 0
+	top: 0
+	width: 30px
+
+	&:after
+		background: none
+		border: none
+		color: #aaa
+		content: '\f140'
+		display: block
+		font: normal 20px/1 'dashicons'
+		padding: 0
+		position: absolute
+		right: 6px
+		speak: none
+		text-align: center
+		text-decoration: none
+		text-indent: 0
+		top: 10px
+		z-index: 1
+		-webkit-font-smoothing: antialiased
+		-moz-osx-font-smoothing: grayscale
+
+	&:hover
+		cursor: pointer
+
+		&:after
+			color: #777
+
+.menu__menu-item__body-amc
+	background: #fff
+	border: 1px solid #dfdfdf
+	border-top: none
+	+box-shadow(0 1px 1px rgba(0,0,0,0.04))
+	display: none
+	overflow: hidden
+	padding: 10px 15px
+	position: relative
+	width: 382px
+
+	p
+		color: #666
+		font-size: 13px
+		font-style: italic
+		margin: .3em 0 .6em
+
+.menu-control-aside-amc__accordions
+	border: 1px solid #e5e5e5
+	+box-shadow(0 1px 1px rgba(0,0,0,0.04))
+	margin: 0
+
+.menu-control-aside-amc__accordions__accordion
+	margin: 0
+
+	&.is-open-amc
+
+		.menu-control-aside-amc__accordions__accordion__title
+			background: #f5f5f5
+
+			&:after
+				content: '\f142'
+
+		.menu-control-aside-amc__accordions__accordion__body
+			display: block
+
+.menu-control-aside-amc__accordions__accordion__title
+	background: #fff
+	border-bottom: 1px solid #dfdfdf
+	cursor: pointer
+	font-size: 14px
+	line-height: 21px
+	margin: 0
+	padding: 10px 10px 11px 14px
+	position: relative
+
+	&:hover
+		background: #f5f5f5
+
+		&:after
+			color: #777
+
+	&:after
+		background: none
+		border: none
+		color: #aaa
+		content: '\f140'
+		display: block
+		font: normal 20px/1 'dashicons'
+		padding: 0
+		position: absolute
+		right: 10px
+		speak: none
+		text-align: center
+		text-decoration: none
+		text-indent: 0
+		top: 12px
+		z-index: 1
+		-webkit-font-smoothing: antialiased
+		-moz-osx-font-smoothing: grayscale
+
+.menu-control-aside-amc__accordions__accordion__body
+	background: #fff
+	border-bottom: 1px solid #dfdfdf
+	display: none
+	padding: 18px 13px
+
+	label
+		display: block
+		overflow: hidden
+
+	span
+		color: #666
+		display: block
+		float: left
+		font-style: italic
+		margin-top: 6px
+
+	input[type="text"],
+	button
+		float: right
+		width: 180px
+
+	.button-controls
+		margin-bottom: 0
+		overflow: hidden
+
+		button
+			width: auto
+
+.inactive-menu-amc
+	background-color: #fdfdfd
+	border: solid 1px #dfdfdf
+	display: block
+	padding: 10px
+
+	&:empty
+		display: none
+
+	li
+		margin: 0 0 5px
+
+		&:last-child
+			margin: 0

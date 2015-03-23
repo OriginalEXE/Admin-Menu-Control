@@ -86,7 +86,8 @@ class AMC_Admin_Menu {
 		foreach ( $menu as $menu_item ) {
 
 			$menu_items[] = array(
-				'title' => ( empty( $menu_item[0] ) ) ? '<hr>' : preg_replace( '!<\s*(span).*?>((.*?)</\1>)?!is', '', $menu_item[0] ),
+				'title' => ( empty( $menu_item[0] ) ) ? '<hr>' : trim( preg_replace( '/<(\w+)[^>]*>.*<\/\1>/i', '', $menu_item[0] ) ),
+				'url'   => $menu_item[2],
 				'depth' => 0,
 			);
 
@@ -95,7 +96,8 @@ class AMC_Admin_Menu {
 				foreach ( $submenu[ $menu_item[2] ] as $submenu_item ) {
 
 					$menu_items[] = array(
-						'title' => ( empty( $submenu_item[0] ) ) ? '<hr>' : preg_replace( '!<\s*(span).*?>((.*?)</\1>)?!is', '', $submenu_item[0] ),
+						'title' => ( empty( $submenu_item[0] ) ) ? '<hr>' : trim( preg_replace( '/<(\w+)[^>]*>.*<\/\1>/i', '', $submenu_item[0] ) ),
+						'url'   => $submenu_item[2],
 						'depth' => 1,
 					);
 
@@ -106,6 +108,66 @@ class AMC_Admin_Menu {
 		}
 
 		return $menu_items;
+
+	}
+
+	/**
+	 * Grab a list of all registered admin pages.
+	 *
+	 * @since 1.0.0
+	 */
+	public function get_admin_pages() {
+
+		global $menu, $submenu;
+
+		$pages = array();
+		$subpages = array();
+
+		foreach ( $menu as $menu_item ) {
+
+			// We don't need separators
+			if ( empty( $menu_item[0] ) ) {
+
+				continue;
+
+			}
+
+			$pages[] = array(
+				'title' => trim( preg_replace( '/<(\w+)[^>]*>.*<\/\1>/i', '', $menu_item[0] ) ),
+				'url'   => $menu_item[2],
+			);
+
+			if ( ! empty( $submenu[ $menu_item[2] ] ) ) {
+
+				foreach ( $submenu[ $menu_item[2] ] as $submenu_item ) {
+
+					$subpages[] = array(
+						'title' => trim( preg_replace( '/<(\w+)[^>]*>.*<\/\1>/i', '', $menu_item[0] ) ) . ' : ' . trim( preg_replace( '/<(\w+)[^>]*>.*<\/\1>/i', '', $submenu_item[0] ) ),
+						'url'   => $submenu_item[2],
+					);
+
+				}
+
+			}
+
+		}
+
+		usort( $pages, array( $this, 'usort_alphabetical' ) );
+		usort( $subpages, array( $this, 'usort_alphabetical' ) );
+
+		return array_merge( $pages, $subpages );
+
+	}
+
+	/**
+	 * Used in usort to sort list alphabetically.
+	 *
+	 * @since 1.0.0
+	 * @access private
+	 */
+	private function usort_alphabetical( $a, $b ) {
+
+		return strcasecmp( $a['title'], $b['title'] );
 
 	}
 

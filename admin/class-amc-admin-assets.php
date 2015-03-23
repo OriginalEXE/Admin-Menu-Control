@@ -87,11 +87,14 @@ class AMC_Admin_Assets {
 
 		$l10n = array();
 
+		$class_amc_admin_menu = $this->amc_registry->get( 'class_amc_admin_menu' );
+
 		// Localization
 		$localize = array(
-			'l10n'       => $l10n,
-			'nonce'      => wp_create_nonce( 'amc-nonce' ),
-			'menu_items' => $this->amc_registry->get( 'class_amc_admin_menu' )->get_admin_menu(),
+			'l10n'        => $l10n,
+			'nonce'       => wp_create_nonce( 'amc-nonce' ),
+			'menu_items'  => $class_amc_admin_menu->get_admin_menu(),
+			'admin_pages' => $class_amc_admin_menu->get_admin_pages(),
 		);
 
 		wp_localize_script( 'amc-admin-plugin-page', 'AMClocalize', $localize );

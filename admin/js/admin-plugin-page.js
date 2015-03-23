@@ -40,12 +40,15 @@
 		/*
 			Route: menuControl
 		 */
+	
 
 		// Menu item model
 		AMC.Models.MenuItem = Backbone.Model.extend({
 			defaults: {
 				title: '',
-				depth: 0
+				url  : '',
+				depth: 0,
+				page : 'Appearance : Editor'
 			}
 		});
 
@@ -54,21 +57,211 @@
 			model: AMC.Models.MenuItem
 		});
 
-		var menuItemsCollection = new AMC.Collections.MenuItems();
+		var activeMenuItemsCollection = new AMC.Collections.MenuItems();
+		var inactiveMenuItemsCollection = new AMC.Collections.MenuItems();
 
-		// Menu item view
-		AMC.Dom.menuItemTemplate = $( '#menu-item-template-amc' );
+		// Add links view
+		AMC.Dom.inactiveMenuItemsContainer = $( '.-js-inactive-menu-item-amc' );
 
-		AMC.Views.MenuItem = Backbone.View.extend({
+		AMC.Views.AddLinks = Backbone.View.extend({
 			events: {
-				'depth_change': 'updateDepth'
+				'click .-js-menu-control-aside-amc__accordions__accordion__title': 'toggleAccordion',
+				'click .-js-add-menu-item-amc': 'addMenuItem',
+				'click .-js-restore-menu-items-amc': 'restoreMenuItem'
+			},
+			initialize: function() {
+
+				this.listenTo( this.collection, 'add', this.render );
+
+			},
+			render: function( added ) {
+
+				if ( _.isArray( added ) ) {
+
+					this.renderMultiple( added );
+
+				} else {
+
+					this.renderSingle( added );
+
+				}
+
+			},
+			renderMultiple: function( menuItems ) {
+
+				var instance = this;
+
+				menuItems.each( function( menuItem ) {
+
+					instance.renderSingle( menuItem );
+
+				});
+
+			},
+			renderSingle: function( menuItem ) {
+
+				var menuItemView = new AMC.Views.InactiveMenuItem({ model: menuItem });
+
+				AMC.Dom.inactiveMenuItemsContainer.append( menuItemView.el );
+
+			},
+			toggleAccordion: function( event ) {
+
+				var $title  = $( event.currentTarget ),
+					$body   = $title.next( '.-js-menu-control-aside-amc__accordions__accordion__body' ),
+					$target = $title.parent( '.-js-menu-control-aside-amc__accordions__accordion' );
+
+				if ( $target.is( '.is-open-amc' ) ) {
+
+					$body.slideUp( 200, function() {
+
+						$target.removeClass( 'is-open-amc' );
+
+					});
+
+				} else {
+
+					var $activeTargets = $target.siblings( '.is-open-amc' );
+
+					if ( $activeTargets.length ) {
+
+						$activeTargets.each( function() {
+
+							var $activeTarget = $( this ),
+								$activeTitle  = $activeTarget.children( '.-js-menu-control-aside-amc__accordions__accordion__title' ),
+								$activeBody   = $activeTarget.children( '.-js-menu-control-aside-amc__accordions__accordion__body' );
+
+							$activeBody.slideUp( 200, function() {
+
+								$activeTarget.removeClass( 'is-open-amc' );
+
+							});
+
+						});
+
+					}
+
+					$body.slideDown( 200, function() {
+
+						$target.addClass( 'is-open-amc' );
+
+					});
+
+				}
+
+			},
+			addMenuItem: function( event ) {
+
+				var $button    = $( event.currentTarget ),
+					$container = $button.closest( '.-js-menu-control-aside-amc__accordions__accordion__body' ),
+					$url       = $container.find( 'input[name="-js-menu-item-url"]' ),
+					$title     = $container.find( 'input[name="-js-menu-item-title"]' ),
+					url        = $url.val().trim(),
+					title      = $title.val().trim();
+
+				// Check if url field is empty
+				if ( ! url.length ) {
+
+					$url.focus();
+
+					return;
+
+				}
+
+				// Check if title field is empty
+				if ( ! title.length ) {
+
+					$title.focus();
+
+					return;
+
+				}
+
+				var menuItem = {
+					title: _.escape( title ),
+					url  : url,
+					depth: 0
+				};
+
+				var newMenuItem = new AMC.Models.MenuItem( menuItem );
+
+				activeMenuItemsCollection.add( newMenuItem );
+
+				$title.val( '' );
+				$url.val( 'http://' );
+
+			},
+			restoreMenuItem: function( event ) {
+
+				var $button    = $( event.currentTarget ),
+					$container = $button.closest( '.-js-menu-control-aside-amc__accordions__accordion__body' ),
+					$menuItems = $container.find( 'input[type="checkbox"]:checked' ).parent();
+
+				if ( ! $menuItems.length ) {
+
+					return;
+
+				}
+
+				$menuItems.each( function() {
+
+					$( this ).trigger( 'restore.amc' );
+
+				});
+
+			}
+		});
+		
+		AMC.Dom.menuControlAside = $( '.menu-control-aside-amc' );
+
+		var addLinksView = new AMC.Views.AddLinks({ collection: inactiveMenuItemsCollection, el: AMC.Dom.menuControlAside });
+
+		// Inactive menu item view
+		AMC.Dom.inactiveMenuItemTemplate = $( '#inactive-menu-item-template-amc' );
+
+		AMC.Views.InactiveMenuItem = Backbone.View.extend({
+			events: {
+				'restore.amc': 'restore'
 			},
 			tagName: 'li',
-			className: 'menu__menu-item-amc',
-			amcTemplate: _.template( AMC.Dom.menuItemTemplate.html() ),
+			amcTemplate: _.template( AMC.Dom.inactiveMenuItemTemplate.html() ),
 			initialize: function() {
 
 				this.render();
+
+			},
+			render: function() {
+
+				this.$el.html( this.amcTemplate( this.model.toJSON() ) );
+
+			},
+			restore: function( event ) {
+
+				inactiveMenuItemsCollection.remove( this.model );
+				activeMenuItemsCollection.add( this.model );
+
+				$( event.currentTarget ).remove();
+
+			}
+		});
+
+		// Active menu item view
+		AMC.Dom.activeMenuItemTemplate = $( '#menu-item-template-amc' );
+
+		AMC.Views.ActiveMenuItem = Backbone.View.extend({
+			events: {
+				'depth_change': 'updateDepth',
+				'click .-js-menu__menu-item__edit-amc': 'toggleEdit',
+				'change input': 'inputChanged'
+			},
+			tagName: 'li',
+			className: 'menu__menu-item-amc',
+			amcTemplate: _.template( AMC.Dom.activeMenuItemTemplate.html() ),
+			initialize: function() {
+
+				this.render();
+
+				this.model.on( 'change', this.render, this );
 
 			},
 			render: function() {
@@ -97,7 +290,27 @@
 
 				this.model.set( 'depth', newDepth );
 
-				console.log( this.model.get( 'depth' ) );
+			},
+			toggleEdit: function( event ) {
+
+				var $trigger = $( event.currentTarget ),
+					$bar     = $trigger.closest( '.menu__menu-item__bar-amc' ),
+					$item    = $bar.closest( '.menu__menu-item-amc' ),
+					$body    = $bar.next( '.menu__menu-item__body-amc' );
+
+				$body.slideToggle( 200, function() {
+
+					$item.toggleClass( 'is-open-amc' );
+
+				});
+
+			},
+			inputChanged: function( event ) {
+
+				var $input   = $( event.currentTarget ),
+					property = $input.attr( 'name' );
+
+				this.model.set( property, _.escape( $input.val().trim() ) );
 
 			}
 		});
@@ -139,7 +352,7 @@
 			},
 			renderSingle: function( menuItem ) {
 
-				var menuItemView = new AMC.Views.MenuItem({ model: menuItem });
+				var menuItemView = new AMC.Views.ActiveMenuItem({ model: menuItem });
 
 				AMC.Dom.menuItemsContainer.append( menuItemView.el );
 
@@ -171,9 +384,6 @@
 
 						if ( isSeparator || ( '0' === depth && $children.length ) ) {
 
-							console.log( 'has children' );
-							console.log( $children );
-
 							transported = true;
 
 							instance.transportChildren( ui );
@@ -202,8 +412,6 @@
 						// Check if separator or has children
 						if ( transported ) {
 
-							console.log( 'children or separator detected' );
-
 							return;
 
 						}
@@ -221,8 +429,6 @@
 
 						// Check if it's a child, but not a last child
 						if ( '1' === depth && ui.placeholder.nextUntil( '[data-depth="0"]:not(.ui-sortable-helper)' ).not( '.ui-sortable-helper' ).length ) {
-
-							console.log( 'not a last child' );
 
 							ui.placeholder.attr( 'data-depth', 1 );
 
@@ -273,8 +479,6 @@
 
 						// Check if it's a child, but not a last child
 						if ( '0' === depth && ui.placeholder.nextUntil( '[data-depth="0"]:not(.ui-sortable-helper)' ).not( '.ui-sortable-helper' ).length ) {
-
-							console.log( 'not a last child' );
 
 							ui.placeholder.attr( 'data-depth', 1 );
 
@@ -362,7 +566,7 @@
 			}
 		});
 
-		var menuItemsView = new AMC.Views.MenuItems({ collection: menuItemsCollection });
+		var menuItemsView = new AMC.Views.MenuItems({ collection: activeMenuItemsCollection });
 
 		// Menu control view
 		AMC.Views.MenuControl = Backbone.View.extend({
@@ -375,7 +579,7 @@
 
 					var newMenuItem = new AMC.Models.MenuItem( menuItem );
 
-					menuItemsCollection.add( newMenuItem );
+					activeMenuItemsCollection.add( newMenuItem );
 
 				})
 

@@ -19,9 +19,42 @@
 			<span class="menu__menu-item__title-amc">
 				<%= title %>
 			</span>
+			<span class="menu__menu-item__edit-amc -js-menu__menu-item__edit-amc"></span>
 		</dt>
 	</dl>
+	<div class="menu__menu-item__body-amc">
+		<p>
+			<label>
+				<?php _e( 'Navigation Label', 'admin-menu-control' ); ?>
+				<input type="text" class="widefat" name="title" value="<%= title %>">
+			</label>
+		</p>
+		<p>
+			<label>
+				<?php _e( 'Page', 'admin-menu-control' ); ?>
+				<select name="page" class="widefat">
+					<option value="custom" data-url="url" <%= ( 'custom' === page ) ? 'selected="selected"' : '' %>><?php _e( 'Custom', 'admin-menu-control' ); ?></option>
+					<option value="none" data-url="#amc" <%= ( 'none' === page ) ? 'selected="selected"' : '' %>><?php _e( 'None', 'admin-menu-control' ); ?></option>
+					<% _.each( AMClocalize.admin_pages, function( registeredPage ) { %>
+						<option value="<%= registeredPage.title %>" data-url="<%= registeredPage.url %>" <%= ( registeredPage.title === page ) ? 'selected="selected"' : '' %>><%= registeredPage.title %></option>
+					<% }) %>
+				</select>
+			</label>
+		</p>
+		<p>
+			<label>
+				<?php _e( 'URL', 'admin-menu-control' ); ?>
+				<input type="text" class="widefat" name="url" value="<%= url %>">
+			</label>
+		</p>
+	</div>
 	<ul class="menu_menu-item__transport"></ul>
+</script>
+
+<script id="inactive-menu-item-template-amc" type="text/template">
+	<label class="menu-item-title">
+		<input type="checkbox"> <%= title %>
+	</label>
 </script>
 <!-- / Backbone templates -->
 
@@ -38,7 +71,45 @@
 		</a>
 	</h2>
 
-	<section class="tab-amc" data-content="menu-control">
+	<section class="tab-amc h-clearfix-amc" data-content="menu-control">
+
+		<div class="menu-control-aside-amc">
+			<ul class="menu-control-aside-amc__accordions">
+				<li class="menu-control-aside-amc__accordions__accordion is-open-amc -js-menu-control-aside-amc__accordions__accordion">
+					<h3 class="menu-control-aside-amc__accordions__accordion__title -js-menu-control-aside-amc__accordions__accordion__title">
+						<?php _e( 'Links', 'admin-menu-control' ); ?>
+					</h3>
+					<div class="menu-control-aside-amc__accordions__accordion__body -js-menu-control-aside-amc__accordions__accordion__body">
+						<p>
+							<label>
+								<span><?php _e( 'URL', 'admin-menu-control' ); ?></span>
+								<input type="text" name="-js-menu-item-url" value="http://">
+							</label>
+						</p>
+						<p>
+							<label>
+								<span><?php _e( 'Link Text', 'admin-menu-control' ); ?></span>
+								<input type="text" name="-js-menu-item-title" placeholder="<?php echo esc_attr( __( 'Menu Item', 'admin-menu-control' ) ); ?>">
+							</label>
+						</p>
+						<p class="button-controls">
+							<button class="button-secondary -js-add-menu-item-amc"><?php _e( 'Add to Menu', 'admin-menu-control' ); ?></button>
+						</p>
+					</div>
+				</li>
+				<li class="menu-control-aside-amc__accordions__accordion -js-menu-control-aside-amc__accordions__accordion">
+					<h3 class="menu-control-aside-amc__accordions__accordion__title -js-menu-control-aside-amc__accordions__accordion__title">
+						<?php _e( 'Inactive', 'admin-menu-control' ); ?>
+					</h3>
+					<div class="menu-control-aside-amc__accordions__accordion__body -js-menu-control-aside-amc__accordions__accordion__body">
+						<ul class="inactive-menu-amc -js-inactive-menu-item-amc"></ul>
+						<p class="button-controls">
+							<button class="button-secondary -js-restore-menu-items-amc"><?php _e( 'Add to Menu', 'admin-menu-control' ); ?></button>
+						</p>
+					</div>
+				</li>
+			</ul>
+		</div>
 
 		<div class="menu-control-container-amc">
 			<header class="menu-control-container-amc__header">
@@ -57,40 +128,6 @@
 				<div class="menu-control-sortable-container">
 
 					<ul class="menu-amc -js-menu-sortable-amc">
-
-						<?php foreach ( $menu as $menu_item ) : /*?>
-
-							<?php $is_separator = ( empty( $menu_item[0] ) ) ? true : false; ?>
-
-							<li class="menu__menu-item-amc">
-								<dl class="menu__menu-item__bar-amc">
-									<dt class="menu__menu-item__handle-amc <?php echo ( $is_separator ) ? 'menu__menu-item__handle-amc--separator' : ''; ?> -js-menu-item-handle-amc">
-										<span class="menu__menu-item__title-amc">
-											<?php echo ( $is_separator ) ? '<hr>' : preg_replace( '!<\s*(span).*?>((.*?)</\1>)?!is', '', $menu_item[0] ); ?>
-										</span>
-									</dt>
-								</dl>
-							</li>
-
-							<?php if ( ! empty( $submenu[ $menu_item[2] ] ) ) : ?>
-
-								<?php foreach ( $submenu[ $menu_item[2] ] as $submenu_item ) : ?>
-
-									<li class="menu__menu-item-amc menu__menu-item-amc--depth-1">
-										<dl class="menu__menu-item__bar-amc">
-											<dt class="menu__menu-item__handle-amc -js-menu-item-handle-amc">
-												<span class="menu__menu-item__title-amc">
-													<?php echo preg_replace( '!<\s*(span).*?>((.*?)</\1>)?!is', '', $submenu_item[0] ); ?>
-												</span>
-											</dt>
-										</dl>
-									</li>
-
-								<?php endforeach; ?>
-
-							<?php endif; ?>
-
-						<?php */ endforeach; ?>
 
 					</ul>
 
